@@ -1,6 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sweet_shop/admin/imageselection.dart';
+import 'package:sweet_shop/models/category.dart';
 
 class AddCategory extends StatefulWidget {
   const AddCategory({super.key});
@@ -10,9 +11,38 @@ class AddCategory extends StatefulWidget {
 }
 
 class _AddCategoryState extends State<AddCategory> {
+  List<Add_Category> addcat = [];
   final TextEditingController categoryController = TextEditingController();
-  final TextEditingController sweetNameController = TextEditingController();
   Uint8List? _image;
+  @override
+  void initState() {
+    super.initState();
+    loadCategories();
+  }
+
+  loadCategories() async {
+    List<Add_Category> temp =
+        await Add_Category.loadListFromLocalStorage('categories');
+    setState(() {
+      addcat = temp;
+    });
+  }
+
+  saveCategory() async {
+    if (categoryController.text.isNotEmpty && _image != null) {
+      Add_Category newCategory = Add_Category(
+        name: categoryController.text,
+        img: _image!,
+      );
+      addcat.add(newCategory);
+      await Add_Category.saveListToLocalStorage(addcat, 'categories');
+      setState(() {
+        categoryController.clear();
+        _image = null;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +57,8 @@ class _AddCategoryState extends State<AddCategory> {
               keyboardType: TextInputType.text,
               controller: categoryController,
               decoration: InputDecoration(
-                labelText: "Enter the Category",
-                fillColor: const Color.fromARGB(255, 215, 224, 243),
+                labelText: "Enter the Category Name",
+                fillColor: Color.fromARGB(255, 255, 255, 255),
                 filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
@@ -63,6 +93,30 @@ class _AddCategoryState extends State<AddCategory> {
                         'assets/fileadd.jpg',
                         scale: 1.8,
                       ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              onPressed: saveCategory,
+              child: Text('submit'),
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: addcat.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Image.memory(
+                      addcat[index].img,
+                      width: 50,
+                      height: 50,
+                      fit: BoxFit.cover,
+                    ),
+                    title: Text(addcat[index].name),
+                  );
+                },
               ),
             ),
           ],

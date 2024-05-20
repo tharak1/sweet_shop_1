@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sweet_shop/admin/add_category.dart';
 import 'package:sweet_shop/admin/homebutton_admin.dart';
+import 'package:sweet_shop/admin/remove_category.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
@@ -30,7 +31,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               ),
               children: const [
                 AdminHomebutton(
-                  imgName: 'Add category',
+                  Name: 'Add category',
+                  functionpg: AddCategory(),
+                ),
+                AdminHomebutton(
+                  Name: 'Remove category',
+                  functionpg: RemoveCategory(),
+                ),
+                AdminHomebutton(
+                  Name: 'Add Sweet',
+                  functionpg: AddCategory(),
+                ),
+                AdminHomebutton(
+                  Name: 'Remove sweet',
                   functionpg: AddCategory(),
                 ),
               ],
